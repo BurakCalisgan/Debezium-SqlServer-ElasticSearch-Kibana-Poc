@@ -1,8 +1,11 @@
-﻿using Application.Services.Abstractions;
-using Application.Services.Implementations;
+﻿using Application.Common.Interfaces;
+using Application.Kafka;
 using Core.Middleware;
 using Domain.Elastic.IRepositories;
+using Infrastructure.Configurations;
 using Infrastructure.Elastic.Repository;
+using Infrastructure.Services;
+using Infrastructure.Services.Kafka;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +22,9 @@ namespace Core.Extensions
 
             services.AddTransient<IErrorLogService, ErrorLogService>();
             services.AddTransient<IErrorLogRepository, ErrorLogRepository>();
+            services.AddSingleton<IEventConsumer, KafkaConsumer>();
+
+            services.AddHostedService<KafkaConsumerService>();
 
             services.AddControllers();
         }

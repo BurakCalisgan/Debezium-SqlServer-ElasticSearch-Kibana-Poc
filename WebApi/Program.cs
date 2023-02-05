@@ -1,4 +1,5 @@
 using Core.Extensions;
+using Infrastructure.Configurations;
 using Serilog;
 
 try
@@ -6,6 +7,8 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.AddSerilog(builder.Configuration, "API Elasticsearch");
     Log.Information("Starting API");
+
+    builder.Services.Configure<KafkaConfiguration>(builder.Configuration.GetSection(nameof(KafkaConfiguration)));
 
     builder.Services.AddApiConfiguration();
 

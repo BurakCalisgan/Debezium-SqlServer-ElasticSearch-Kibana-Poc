@@ -1,11 +1,13 @@
-﻿using Application.Services.Abstractions;
+﻿using Application.Common.Interfaces;
+using Application.Common.Models.Cdc;
 using Domain.Elastic.IRepositories;
 using Domain.ElasticAggregationModels;
 using Domain.Indices;
 using Infrastructure.Elastic.Extensions;
 using Nest;
+using System.Diagnostics.Metrics;
 
-namespace Application.Services.Implementations
+namespace Infrastructure.Services
 {
     public class ErrorLogService : IErrorLogService
     {
@@ -148,6 +150,29 @@ namespace Application.Services.Implementations
 
         public async Task InsertAsync(IndexErrorLog errorLog)
         {
+            await _errorLogRepository.InsertAsync(errorLog);
+        }
+
+        public async Task InsertAsync(CdcModel request)
+        {
+
+            IndexErrorLog errorLog = new();
+
+            if (request != null && request.Payload != null)
+            {
+                errorLog.UpdateTime = DateTime.Now;
+                errorLog.Id = Guid.NewGuid().ToString();
+
+                if (request.Payload.After != null)
+                {
+                    errorLog.ErrorDate = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Math.Round(request.Payload.After.ErrorDate / 1000d)).ToLocalTime();
+                    errorLog.ErrorCorelationId = request.Payload.After.ErrorCorelationId;
+                    errorLog.ErrorLevel = request.Payload.After.ErrorLevel;
+                    errorLog.ErrorTitle = request.Payload.After.ErrorTitle;
+                    errorLog.Description = request.Payload.After.Description;
+                }
+
+            }
             await _errorLogRepository.InsertAsync(errorLog);
         }
 

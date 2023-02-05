@@ -1,4 +1,4 @@
-﻿using Application.Services.Abstractions;
+﻿using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers

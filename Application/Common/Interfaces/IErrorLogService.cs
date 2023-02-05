@@ -1,12 +1,14 @@
-﻿using Domain.ElasticAggregationModels;
+﻿using Application.Common.Models.Cdc;
+using Domain.ElasticAggregationModels;
 using Domain.Indices;
 
-namespace Application.Services.Abstractions
+namespace Application.Common.Interfaces
 {
-    public  interface IErrorLogService
+    public interface IErrorLogService
     {
         Task InsertManyAsync();
         Task InsertAsync(IndexErrorLog errorLog);
+        Task InsertAsync(CdcModel errorLog);
         Task<ICollection<IndexErrorLog>> GetAllAsync();
         Task<ICollection<IndexErrorLog>> GetByErrorTitleWithTerm(string errorTitle);
         Task<ICollection<IndexErrorLog>> GetByErrorTitleWithMatch(string errorTitle);
