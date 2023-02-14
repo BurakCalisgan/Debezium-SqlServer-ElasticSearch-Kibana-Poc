@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "d6e8de39-a3da-4e25-b144-0a7442e9aeea",
+		"name": "Debezium Endpoints for Elastic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4598437"
+	},
+	"item": [
+		{
+			"name": "Add Connector",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"elastic-error-connector\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\",\r\n        \"tasks.max\": \"1\",\r\n        \"topic.prefix\": \"sqlserver\",\r\n        \"database.hostname\": \"sqlserver\",\r\n        \"database.port\": \"1433\",\r\n        \"database.user\": \"sa\",\r\n        \"database.password\": \"Password123321\",\r\n        \"database.names\": \"DebeziumElasticTest\",\r\n        \"schema.history.internal.kafka.bootstrap.servers\": \"kafka:9092\",\r\n        \"schema.history.internal.kafka.topic\": \"sqlserver.DebeziumElasticTest.dbo.ErrorLog\",\r\n        \"database.encrypt\": \"false\",\r\n        \"time.precision.mode\": \"connect\",\r\n        \"transforms\": \"unwrap,errordate\",\r\n        \"transforms.unwrap.type\": \"io.debezium.transforms.ExtractNewRecordState\",\r\n        \"transforms.unwrap.drop.tombstones\": true,\r\n        \"transforms.unwrap.add.fields\": \"op,table\",\r\n        \"transforms.unwrap.delete.handling.mode\": \"rewrite\",\r\n        \"transforms.errordate.type\": \"org.apache.kafka.connect.transforms.TimestampConverter$Value\",\r\n        \"transforms.errordate.target.type\": \"string\",\r\n        \"transforms.errordate.field\": \"ErrorDate\",\r\n        \"transforms.errordate.format\": \"yyyy-MM-dd'T'HH:mm:ss\",\r\n        \"snapshot.mode\": \"schema_only\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Connectors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Connector By Name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/connectors/elastic-error-connector",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"elastic-error-connector"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Connector",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/connectors/elastic-error-connector",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"elastic-error-connector"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
